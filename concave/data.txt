@@ -1,0 +1,58 @@
+mc = hoomd.hpmc.integrate.ConvexPolygon(default_d=2,default_a=3)
+    mc.shape[shape] = dict(
+                vertices = [
+                (-2, 0),
+                (2, 0),
+                (11/8, 5*math.sqrt(63)/8),
+                ]
+    )
+    particle_area=5*math.sqrt(63)/4
+
+mc = hoomd.hpmc.integrate.SimplePolygon(default_d=2,default_a=0.5)
+mc.shape[shape] = dict(
+            vertices = [
+            (-1, 0),
+            (1, 0),
+            (1,2),
+            (0,1),
+            (-2,2)
+            ]
+)
+particle_area=7/2
+
+mc = hoomd.hpmc.integrate.SimplePolygon(default_d=3,default_a=2)
+mc.shape[shape] = dict(
+            vertices = [
+            (-2.5,1),
+            (-2.5,0.5),
+            (-0.5,0.5),
+            (-0.5,-0.5),
+            (-2.5,-0.5),
+            (-2.5,-1),
+            (2.5,-1),
+            (2.5,-0.5),
+            (0.5,-0.5),
+            (0.5,0.5),
+            (2.5,0.5),
+            (2.5,1),
+            ]
+)
+particle_area=6
+
+mc = hoomd.hpmc.integrate.SimplePolygon(default_d=2,default_a=2)
+mc.shape[shape] = dict(
+            vertices = [
+            (0,1),
+            (-0.5,0.1),
+            (-0.9,1),
+            (-1,1),
+            (-0.5,0),
+            (0,0.9),
+            (0.5,0),
+            (1,1),
+            (0.9,1),
+            (0.5,0.1)
+            ]
+)
+particle_area=0.24
+
