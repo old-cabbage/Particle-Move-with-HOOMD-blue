@@ -10,13 +10,14 @@ with open("result/sdf/convex/convex_sdf.json","r",encoding="utf-8") as file:
     oridata=json.load(file)
 
 # 定义目标id
-target_id = [6]
+target_id = [1]
 data=[]
 times=0
+target_pack="0.2"
 #遍历寻找
 item=None
 for i in range(len(target_id)):
-    for item in oridata["0.5"]:
+    for item in oridata[target_pack]:
         if item["id"] == target_id[i]:
             data += item["data"]
             times += item["times"]
@@ -38,7 +39,7 @@ print(f"计算方差: {var_cal:.8f},标准差：{std_cal:.8f}")
 
 np.random.shuffle(data)
 # 执行K-S检验（检验数据是否符合均值为mu、标准差为sigma的正态分布）
-statistic, p_value = kstest(data[:10000], lambda x: norm.cdf(x, loc=mean_cal, scale=std_cal))
+statistic, p_value = kstest(data[:1000], lambda x: norm.cdf(x, loc=mean_cal, scale=std_cal))
 print(f"统计量D={statistic:.6f}, p值={p_value:.12f}")
 
 #data=data[:10000]
@@ -46,7 +47,7 @@ print(f"统计量D={statistic:.6f}, p值={p_value:.12f}")
 plt.figure(figsize=(12, 5))
 plt.subplot(1, 2, 1)
 plt.scatter(range(len(data[:10000])), data[:10000], s=5, alpha=0.1, color='red')
-plt.title(rf'${mean_cal:.5f}\pm{uncer_a:.5f}$; Variance:{var_cal:.5f}')
+plt.title(rf'Density{target_pack}: ${-mean_cal:.5f}\pm{uncer_a:.5f}$; Variance:{var_cal:.5f}')
 plt.xlabel('Index')
 plt.ylabel('SDF Value')
 plt.grid(alpha=0.3)
@@ -77,12 +78,12 @@ plt.plot(x, norm.pdf(x, mean_cal, std_cal),
         'b-', lw=1, alpha=0.8, label='Expected Norm Distribution')
 
 # 添加均值线和标准差线
-plt.axvline(mean_cal, color='yellow', linestyle='-', linewidth=1, label=rf'Average $\mu={mean_cal:.5f}$')
-plt.axvline(mean_cal + std_cal, color='orange', linestyle='--', linewidth=1, label=rf'$\mu+\sigma={mean_cal + std_cal:.5f}$')
-plt.axvline(mean_cal - std_cal, color='orange', linestyle='--', linewidth=1, label=rf'$\mu-\sigma={mean_cal - std_cal:.5f}$')
+plt.axvline(float(mean_cal), color='yellow', linestyle='-', linewidth=1, label=rf'Average $\mu={mean_cal:.5f}$')
+plt.axvline(float(mean_cal + std_cal), color='orange', linestyle='--', linewidth=1, label=rf'$\mu+\sigma={mean_cal + std_cal:.5f}$')
+plt.axvline(float(mean_cal - std_cal), color='orange', linestyle='--', linewidth=1, label=rf'$\mu-\sigma={mean_cal - std_cal:.5f}$')
 
 
-plt.title('Probability Distribution')
+plt.title(f'Probability Distribution;Data number:{times}')
 plt.xlabel('SDF Value')
 plt.ylabel('Density')
 plt.legend()

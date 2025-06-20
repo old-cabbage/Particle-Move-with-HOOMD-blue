@@ -75,7 +75,7 @@ plt.plot(x, y_5,
          label='$\phi=0.5$')
 
 # 添加标题和标签
-plt.title('result')
+#plt.title('result')
 plt.xlabel('i')
 plt.ylabel('$lnP_i$')
 

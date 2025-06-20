@@ -70,10 +70,10 @@ datafi1y03exp=[[0.2, 0.3, 0.26000000000000006, 0.13999999999999999, 0.4600000000
 ]
 
 datax=datax2
-datay=datafi1y03com
+datay=datafi1y05com
 
 dataxexp=datax2exp
-datayexp=datafi1y03exp
+datayexp=datafi1y05exp
 
 # 生成示例数据（已知曲线）
 x = np.array(datax)
@@ -98,6 +98,7 @@ coefficientsexp = np.polyfit(xexp, yexp, degreeexp)
 
 print(f'关键压缩对比项：{coefficients[-1]/4}')
 print(f'关键膨胀对比项：{coefficientsexp[-1]/4}')
+print(f'关键对比项：{coefficients[-1]/4-coefficientsexp[-1]/4}')
 
 x=xexp
 y=yexp

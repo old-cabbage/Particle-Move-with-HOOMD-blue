@@ -11,7 +11,7 @@ x10=np.array(range(50,1050,50))
 
 x05=np.array(range(0,510,10))
 
-x50=np.array(range(201,5101,200))
+x50=np.array(range(1,5101,100))
 
 p03=[-0.06894684818889688, -0.14053903679483104, -0.21488063976343305, -0.292231600276822, 
 -0.3725599178757329, -0.4562845473617415, -0.5433239982863867, -0.6343127486011367, 
@@ -69,7 +69,7 @@ data1005=[-0.14590721242783664, -0.3039546014830905, -0.4761165390662196, -0.661
 N=5000
 # 生成示例数据（已知曲线)
 x = x50
-y = np.array(data5003)
+y = np.array([0]+data5005)
 
 # 进行多项式拟合
 degree = 4  # 选择多项式阶数
@@ -114,5 +114,5 @@ plt.plot(x_fit, y_fit, label=f'Fitted Polynomial (degree={degree})')
 plt.legend()
 plt.xlabel('x')
 plt.ylabel('y')
-plt.title('Polynomial Fit')
+#plt.title(' Polynomial Fit')
 plt.show()
