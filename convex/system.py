@@ -10,7 +10,7 @@ import time
 import json
 import os
 
-def add_data_with_auto_id(new_data, target_class="user", filename="result\sdf\convex\convex_sdf.json"):
+def add_data_with_auto_id(new_data, target_class="user", filename="result/sdf/convex/convex_sdf.json"):
     # 如果文件存在，读取数据；否则初始化空结构
     if os.path.exists(filename):
         with open(filename, "r", encoding="utf-8") as f:
@@ -30,6 +30,33 @@ def add_data_with_auto_id(new_data, target_class="user", filename="result\sdf\co
 
     # 将新数据添加到目标类中
     data[target_class].append(new_data)
+
+    # 写回 JSON 文件
+    with open(filename, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
+    return new_id  # 返回生成的 id（可选）
+
+def add_data_with_auto_id_p(new_data, target_class1="0.5",target_class2="5000", filename="result/sdf/convex/convex_sdf.json"):
+    # 如果文件存在，读取数据；否则初始化空结构
+    if os.path.exists(filename):
+        with open(filename, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    else:
+        data = {target_class1: {target_class2:{}}}
+
+    # 获取当前最大的 id（若列表为空则从 0 开始）
+    if data[target_class1][target_class2]:
+        max_id = max(item["id"] for item in data[target_class1][target_class2])
+    else:
+        max_id = 0
+
+    # 为新数据分配 id
+    new_id = max_id + 1
+    new_data["id"] = new_id
+
+    # 将新数据添加到目标类中
+    data[target_class1][target_class2].append(new_data)
 
     # 写回 JSON 文件
     with open(filename, "w", encoding="utf-8") as f:
@@ -235,7 +262,7 @@ class System:
                 endpoints_y.append(y)
             col_spacing=(max(endpoints_x)-min(endpoints_x))
             row_spacing=(max(endpoints_y)-min(endpoints_y))
-            col_spacing=row_spacing=max(col_spacing,row_spacing)*1.6
+            col_spacing=row_spacing=max(col_spacing,row_spacing)*1.2
             cols=rows=math.ceil(math.sqrt(self.num))
             width=col_spacing*(cols+1)
             height=row_spacing*(rows+1)
@@ -399,7 +426,7 @@ class System:
     def random_insert(self,insert_times):
         self.fv=hoomd.hpmc.compute.FreeVolume(test_particle_type=self.shape, num_samples=insert_times)
         self.simulation.operations.computes.append(self.fv)
-        self.success_insert = round(self.fv.free_volume * insert_times / self.simulation.state.box.volume)
+        self.success_insert = round(self.fv.free_volume * insert_times / self.volume)
         return self.success_insert
 
     def calculate_sdf(self,sdf_mc,sdf_xmax,sdf_dx,sdf_each_run):
@@ -407,15 +434,15 @@ class System:
         self.total_sdf_sdfexpansion=np.zeros(int(sdf_xmax/sdf_dx))
         self.sdf_compute = hoomd.hpmc.compute.SDF(xmax=sdf_xmax, dx=sdf_dx)
         self.simulation.operations.computes.append(self.sdf_compute)
-        #sdf_start_time=time.time()
+        sdf_start_time=time.time()
         print("sdf循环开始")
         for i in range(sdf_mc):
             self.simulation.run(sdf_each_run)
             self.total_sdf_sdfcompression += self.sdf_compute.sdf_compression
             self.total_sdf_sdfexpansion += self.sdf_compute.sdf_expansion
-            #if (i+1)%(sdf_mc//10)==0:
-            #    sdf_interval_time=time.time()
-            #    print(f"循环已经进行了{i+1}次,耗时{sdf_interval_time-sdf_start_time:.2f}秒")
+            if (i+1)%(sdf_mc//10)==0:
+                sdf_interval_time=time.time()
+                print(f"循环已经进行了{i+1}次,耗时{sdf_interval_time-sdf_start_time:.2f}秒")
         self.total_sdf_xcompression = self.sdf_compute.x_compression
         self.total_sdf_xexpansion = self.sdf_compute.x_expansion
         self.total_sdf_sdfcompression /= sdf_mc
