@@ -10,10 +10,10 @@ with open("result/sdf/convex/convex_sdf.json","r",encoding="utf-8") as file:
     oridata=json.load(file)
 
 # 定义目标id
-target_id = [1]
+target_id = [1,2]
 data=[]
 times=0
-target_pack="0.2"
+target_pack="0.1"
 #遍历寻找
 item=None
 for i in range(len(target_id)):
@@ -33,7 +33,7 @@ uncer_a=std_cal/np.sqrt(times)          # 不确定度
 
 print(f"数据量：{times}")
 print(f"计算均值: {mean_cal:.8f}")
-print(f"不确定度{uncer_a:.8f}$")
+print(f"不确定度:{uncer_a:.8f}")
 print(f"计算方差: {var_cal:.8f},标准差：{std_cal:.8f}")
 #print(f"真实均值: {mu_true}, 真实标准差: {sigma_true}")
 
@@ -89,4 +89,12 @@ plt.ylabel('Density')
 plt.legend()
 plt.grid(alpha=0.3)
 plt.tight_layout()
+#plt.suptitle(f'SDF Analysis for Convex Particles (packing fraction: {target_pack})')
+
+# Create a directory to save figures if it doesn't exist
+output_dir = '/home/ethan/图片/sdf_analysis'
+os.makedirs(output_dir, exist_ok=True)
+save_path = os.path.join(output_dir, f"sdf_analysis_convex_{target_pack}.png")
+plt.savefig(save_path)
+
 plt.show()

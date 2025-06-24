@@ -13,7 +13,7 @@ with open("result/convex/convex.json","r",encoding="utf-8") as file:
 target_id = [1]
 data = [[] for _ in range(25)]
 times=0
-target_pack="0.5"
+target_pack="0.1"
 target_value=[0]*25
 num=list((x+1)*200 for x in range(25))
 #遍历寻找
@@ -118,7 +118,7 @@ plt.plot(num, target_value,
          markerfacecolor='none',   # 标记内部为空心
          #markeredgecolor='purple',  # 标记边框颜色为黑色
          markeredgewidth=1,      # 标记边框宽度
-         label='$\phi=0.5$')
+         label=f'$\phi=${target_pack}')
 
 # 添加标题和标签
 plt.title('result')
@@ -130,4 +130,11 @@ plt.suptitle(f'Probability Distribution;Data number:{times}')
 plt.legend(fontsize=7)
 plt.grid(alpha=0.3)
 plt.tight_layout()
+
+# Create a directory to save figures if it doesn't exist
+output_dir = 'generated_figures'
+os.makedirs(output_dir, exist_ok=True)
+save_path = os.path.join(output_dir, f"probability_distribution_convex_{target_pack}.png")
+plt.savefig(save_path)
+
 plt.show()
